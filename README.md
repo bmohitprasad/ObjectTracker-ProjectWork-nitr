@@ -36,17 +36,6 @@ TECH STACK
 
 ------------------------------------------------------------
 
-PROJECT STRUCTURE
-
-.
-├── all.mp4
-├── tracked_output.mp4
-├── video_tracking_output.csv
-├── main.py
-└── README.md
-
-------------------------------------------------------------
-
 INSTALLATION
 
 Step 1: Clone the Repository
@@ -58,12 +47,11 @@ Step 2: Install Dependencies
 
 Ensure Python 3.8 or higher is installed.
 
-pip install ultralytics
-pip install opencv-python
-pip install numpy
-pip install pandas
-pip install deep-sort-realtime
-
+- pip install ultralytics
+- pip install opencv-python
+- pip install numpy
+- pip install pandas
+- pip install deep-sort-realtime
 ------------------------------------------------------------
 
 USAGE
