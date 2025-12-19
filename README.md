@@ -1,148 +1,172 @@
 # Vehicle Tracking using YOLOv8 and Deep SORT
 
-This project implements a real-time vehicle (car) detection, tracking, and movement analysis system using YOLOv8 for object detection and Deep SORT for multi-object tracking. The system processes a video file, tracks cars frame-by-frame, visualizes motion trails, calculates movement and FPS, and logs tracking data into a CSV file.
+This project implements a real-time vehicle (car) detection, tracking, and movement analysis system using YOLOv8 for object detection and Deep SORT for multi-object tracking. The system processes a video file frame by frame, detects cars, assigns persistent identities, visualizes motion trails, computes movement metrics, calculates frames per second (FPS), and logs detailed tracking information into a CSV file for offline analysis.
 
----
+The goal of this project is to demonstrate an end-to-end computer vision pipeline that combines deep learning–based object detection with appearance-based multi-object tracking for vehicle movement analysis.
 
-## Features
+------------------------------------------------------------
 
-- Car detection using YOLOv8 (COCO class: car)
-- Multi-object tracking using Deep SORT
-- Persistent unique ID assignment per vehicle
-- Motion trail visualization for tracked cars
-- Smoothed movement estimation per vehicle
-- Real-time FPS calculation
-- Annotated output video generation
-- Frame-wise CSV logging for analysis
+FEATURES
 
----
+- Detects cars in video frames using YOLOv8
+- Filters detections to include only the COCO car class
+- Tracks multiple cars simultaneously using Deep SORT
+- Assigns a unique and persistent ID to each detected car
+- Maintains identity consistency across video frames
+- Draws bounding boxes around tracked vehicles
+- Displays the assigned car ID above each bounding box
+- Computes the center point of each bounding box
+- Calculates movement using Euclidean distance
+- Smooths movement values using a rolling average
+- Draws motion trails for visualizing vehicle paths
+- Calculates real-time and averaged FPS
+- Saves an annotated output video
+- Logs detailed tracking data into a CSV file
 
-## Tech Stack
+------------------------------------------------------------
+
+TECH STACK
 
 - Python
-- YOLOv8 (Ultralytics)
+- Ultralytics YOLOv8
 - Deep SORT (deep-sort-realtime)
 - OpenCV
 - NumPy
 - Pandas
 
----
+------------------------------------------------------------
 
-## Project Structure
+PROJECT STRUCTURE
 
+.
 ├── all.mp4
 ├── tracked_output.mp4
 ├── video_tracking_output.csv
 ├── main.py
 └── README.md
 
+------------------------------------------------------------
 
----
+INSTALLATION
 
-## Installation
+Step 1: Clone the Repository
 
-### Clone the Repository
 git clone https://github.com/your-username/vehicle-tracking-yolov8.git
 cd vehicle-tracking-yolov8
 
-Install Dependencies
+Step 2: Install Dependencies
 
-Ensure Python 3.8 or later is installed.
+Ensure Python 3.8 or higher is installed.
 
-pip install ultralytics opencv-python numpy pandas deep-sort-realtime
+pip install ultralytics
+pip install opencv-python
+pip install numpy
+pip install pandas
+pip install deep-sort-realtime
 
-Usage
+------------------------------------------------------------
 
-Place the input video file in the project directory and name it all.mp4.
+USAGE
 
-Run the tracking script:
+1. Place the input video file in the project directory.
+2. Rename the video file to all.mp4
+3. Run the main script.
 
 python main.py
 
+4. Press the q key to stop execution early if needed.
 
-Press q to stop execution at any time.
+------------------------------------------------------------
 
-Output
-Tracked Video
+OUTPUT FILES
 
-File: tracked_output.mp4
+Tracked Video Output
 
-Contains bounding boxes, unique car IDs, motion trails, and FPS overlay.
+File name: tracked_output.mp4
 
-CSV Output
+The output video contains:
+- Bounding boxes around detected cars
+- Unique car IDs displayed above each vehicle
+- Motion trails representing recent movement paths
+- Same resolution and frame rate as the input video
 
-File: video_tracking_output.csv
+------------------------------------------------------------
 
-Columns:
+CSV Output File
 
-frame
+File name: video_tracking_output.csv
 
-timestamp
+Each row in the CSV file represents one tracked car in one video frame.
 
-car_id
+CSV Columns
 
-car_center
+frame       : Frame index of the video
+timestamp   : Time when the frame was processed
+car_id      : Unique ID assigned by Deep SORT
+car_center  : Center of bounding box in (x, y) pixel coordinates
+x1          : Left x-coordinate of bounding box
+y1          : Top y-coordinate of bounding box
+x2          : Right x-coordinate of bounding box
+y2          : Bottom y-coordinate of bounding box
+movement    : Smoothed pixel displacement between frames
+fps         : Average frames per second during processing
 
-x1, y1, x2, y2
+------------------------------------------------------------
 
-movement
+DETECTION AND TRACKING PIPELINE
 
-fps
+1. Video frames are read sequentially using OpenCV
+2. Each frame is passed to the YOLOv8 model for object detection
+3. Only detections belonging to the COCO car class (class ID 2) are retained
+4. Detections are converted to the format required by Deep SORT
+5. Deep SORT associates detections across frames and assigns persistent IDs
+6. Bounding box centers are computed for each tracked car
+7. Movement is calculated using Euclidean distance
+8. Movement values are smoothed using a rolling average window
+9. Motion trails are drawn using historical center points
+10. FPS is calculated using frame processing time
+11. Annotated frames are written to the output video
+12. Tracking data is logged and exported as a CSV file
 
-The CSV file can be used for traffic analysis, vehicle movement studies, or visualization pipelines.
+------------------------------------------------------------
 
-Detection and Tracking Pipeline
+CUSTOMIZATION OPTIONS
 
-YOLOv8 performs object detection on each frame.
+- Change YOLOv8 model size for speed or accuracy
+- Track different object classes by modifying the COCO class ID
+- Adjust motion trail length by changing history buffer size
+- Tune Deep SORT parameters such as max age and cosine distance
+- Modify confidence and IoU thresholds for detection filtering
 
-Only cars (COCO class ID = 2) are selected.
+------------------------------------------------------------
 
-Deep SORT assigns persistent IDs and maintains identity across frames.
+USE CASES
 
-Vehicle movement is calculated using Euclidean distance between consecutive bounding box centers.
+- Traffic monitoring and analysis
+- Smart city applications
+- Vehicle behavior analytics
+- Surveillance systems
+- Computer vision research
 
-Movement values are smoothed using a rolling average to reduce noise.
+------------------------------------------------------------
 
-Customization
+LIMITATIONS
 
-Change YOLO model size:
+- Movement is measured in pixel units, not real-world distance
+- Performance depends on available CPU or GPU resources
+- Heavy occlusion may occasionally cause ID switches
+- Real-world speed estimation requires camera calibration
 
-model = YOLO('yolov8s.pt')  # Faster inference
-model = YOLO('yolov8l.pt')  # Higher accuracy
+------------------------------------------------------------
 
-
-Track other object classes by modifying the COCO class ID filter.
-
-Adjust motion trail length by changing the deque size.
-
-Use Cases
-
-Traffic monitoring and analysis
-
-Smart city applications
-
-Vehicle behavior analytics
-
-Surveillance systems
-
-Computer vision research projects
-
-Limitations
-
-Movement is measured in pixel units, not real-world distance.
-
-Tracking accuracy may degrade under heavy occlusion.
-
-Performance depends on available hardware resources.
-
-License
+LICENSE
 
 This project is licensed under the MIT License.
 
-Acknowledgements
+------------------------------------------------------------
 
-Ultralytics YOLOv8
+ACKNOWLEDGEMENTS
 
-Deep SORT Realtime
-
-OpenCV community
+- Ultralytics YOLOv8
+- Deep SORT Realtime
+- OpenCV community
