@@ -40,9 +40,6 @@ INSTALLATION
 
 Step 1: Clone the Repository
 
-git clone https://github.com/your-username/vehicle-tracking-yolov8.git
-cd vehicle-tracking-yolov8
-
 Step 2: Install Dependencies
 
 Ensure Python 3.8 or higher is installed.
